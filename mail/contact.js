@@ -1,65 +1,43 @@
-$(function () {
+import emailjs from "emailjs-com";
+import React from 'react';
 
-    $("#contactForm input, #contactForm textarea").jqBootstrapValidation({
-        preventSubmit: true,
-        submitError: function ($form, event, errors) {
-        },
-        submitSuccess: function ($form, event) {
-            event.preventDefault();
-            var name = $("input#name").val();
-            var email = $("input#email").val();
-            var subject = $("input#subject").val();
-            var message = $("textarea#message").val();
+export default function ContactUs() {
 
-            $this = $("#sendMessageButton");
-            $this.prop("disabled", true);
-
-            $.ajax({
-                url: "contact.php",
-                type: "POST",
-                data: {
-                    name: name,
-                    email: email,
-                    subject: subject,
-                    message: message
-                },
-                cache: false,
-                success: function () {
-                    $('#success').html("<div class='alert alert-success'>");
-                    $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-                            .append("</button>");
-                    $('#success > .alert-success')
-                            .append("<strong>Your message has been sent. </strong>");
-                    $('#success > .alert-success')
-                            .append('</div>');
-                    $('#contactForm').trigger("reset");
-                },
-                error: function () {
-                    $('#success').html("<div class='alert alert-danger'>");
-                    $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-                            .append("</button>");
-                    $('#success > .alert-danger').append($("<strong>").text("Sorry " + name + ", it seems that our mail server is not responding. Please try again later!"));
-                    $('#success > .alert-danger').append('</div>');
-                    $('#contactForm').trigger("reset");
-                },
-                complete: function () {
-                    setTimeout(function () {
-                        $this.prop("disabled", false);
-                    }, 1000);
-                }
-            });
-        },
-        filter: function () {
-            return $(this).is(":visible");
-        },
-    });
-
-    $("a[data-toggle=\"tab\"]").click(function (e) {
+    function sendEmail(e) {
         e.preventDefault();
-        $(this).tab("show");
-    });
-});
 
-$('#name').focus(function () {
-    $('#success').html('');
-});
+    emailjs.sendForm('gmail', 'youtube_template', e.target, '9MkzkgxMhPZ5qTsgC')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
+        e.target.reset()
+    }
+
+    return(
+        <div>
+            <div className="container">
+            <form onSubmit={sendEmail}>
+                    <div className="row pt-5 mx-auto">
+                        <div className="col-8 form-group mx-auto">
+                            <input type="text" className="form-control" placeholder="Name" name="name"/>
+                        </div>
+                        <div className="col-8 form-group pt-2 mx-auto">
+                            <input type="email" className="form-control" placeholder="Email Address" name="email"/>
+                        </div>
+                        <div className="col-8 form-group pt-2 mx-auto">
+                            <input type="text" className="form-control" placeholder="Subject" name="subject"/>
+                        </div>
+                        <div className="col-8 form-group pt-2 mx-auto">
+                            <textarea className="form-control" id="" cols="30" rows="8" placeholder="Your message" name="message"></textarea>
+                        </div>
+                        <div className="col-8 pt-3 mx-auto">
+                            <input type="submit" className="btn btn-info" value="Send Message"></input>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
