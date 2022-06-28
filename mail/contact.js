@@ -6,7 +6,7 @@ export default function ContactUs() {
     function sendEmail(e) {
         e.preventDefault();
 
-    emailjs.sendForm('gmail', 'youtube_template', e.target, '9MkzkgxMhPZ5qTsgC')
+    emailjs.sendForm('gmail', 'template_95brjxi', template_95brjxi, 'sNwNNzHDDUbYYadZQewLk')
         .then((result) => {
             console.log(result.text);
         }, (error) => {
